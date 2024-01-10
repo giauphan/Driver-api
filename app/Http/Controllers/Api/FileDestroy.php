@@ -32,7 +32,7 @@ class FileDestroy extends Controller
             $file = FileData::find($id);
             MultiMigrationService::disconnectFromMulti();
         }
-        if (!$file) {
+        if (! $file) {
             return response()->json([
                 'status' => 404,
                 'error' => 'file not Found',
