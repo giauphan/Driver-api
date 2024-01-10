@@ -25,14 +25,14 @@ class FileDestroy extends Controller
         }
         $id = $request->input('file_id');
         $migration = MultiDatabase::where('status', 1)->first();
-
+        $file = false;
         if ($migration) {
             MultiMigrationService::switchToMulti($migration);
 
             $file = FileData::find($id);
             MultiMigrationService::disconnectFromMulti();
         }
-        if (! $file) {
+        if (!$file) {
             return response()->json([
                 'status' => 404,
                 'error' => 'file not Found',
