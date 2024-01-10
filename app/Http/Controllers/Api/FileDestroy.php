@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\FileData;
+use App\Models\MultiDatabase;
+use App\Service\MultiMigrationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -22,10 +24,15 @@ class FileDestroy extends Controller
             ], 422);
         }
         $id = $request->input('file_id');
+        $migration = MultiDatabase::where('status', 1)->first();
 
-        $file = FileData::find($id);
+        if ($migration) {
+            MultiMigrationService::switchToMulti($migration);
 
-        if (! $file) {
+            $file = FileData::find($id);
+            MultiMigrationService::disconnectFromMulti();
+        }
+        if (!$file) {
             return response()->json([
                 'status' => 404,
                 'error' => 'file not Found',
