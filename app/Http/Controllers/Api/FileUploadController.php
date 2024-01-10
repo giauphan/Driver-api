@@ -175,7 +175,7 @@ class FileUploadController extends Controller
             $record = FileData::firstOrNew(['business_code' => $fileName]);
 
             if ($record->exists) {
-                $share = route('preview', ['id' => $record->has_business_code],['DatabaseID', $migration->id]);
+                $share = route('preview', ['id' => $record->has_business_code], ['DatabaseID', $migration->id]);
 
                 return [
                     'status' => 429,
