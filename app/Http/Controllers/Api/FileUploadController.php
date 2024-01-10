@@ -101,7 +101,7 @@ class FileUploadController extends Controller
             ->first();
 
         if ($migration) {
-            $share .= '&&DatabaseID='.$migration->id;
+            $share .= '&&DatabaseID=' . $migration->id;
         }
 
         return response()->json([
@@ -120,7 +120,7 @@ class FileUploadController extends Controller
         MultiDatabase::where('status', 1)->update(['status' => 0]);
 
         // 3. Use the obtained id to construct the new database name
-        $newDatabaseName = $databaseName.'_bcdnscanner_'.($newRecord ? ($newRecord->id + 1) : 1);
+        $newDatabaseName = $databaseName . '_bcdnscanner_' . ($newRecord ? ($newRecord->id + 1) : 1);
 
         // 4. Ensure the new database name is unique
         $database_multi = MultiDatabase::create(
@@ -175,8 +175,10 @@ class FileUploadController extends Controller
             $record = FileData::firstOrNew(['business_code' => $fileName]);
 
             if ($record->exists) {
-                $share = route('preview', ['id' => $record->has_business_code], ['DatabaseID', $migration->id]);
-
+                $share = route('preview', [
+                    'id' => $record->has_business_code,
+                    'DatabaseID' => $migration->id
+                ]);
                 return [
                     'status' => 429,
                     'id' => $record->id,
