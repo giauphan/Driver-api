@@ -28,7 +28,7 @@ class FileViewController extends Controller
         }
         if ($request->has('business_code')) {
             $file = FileData::query()
-                ->where('business_code', $request->input('business_code'))
+                ->where('business_code', 'like',"%$request->input('business_code')%")
                 ->get();
             if ($file->isEmpty()) {
                 return response()->json([
