@@ -14,10 +14,10 @@ class FileViewController extends Controller
     public function __invoke(Request $request)
     {
         $limit = $request->input('limit') ?? 1;
-
+        $databaseId = $request->has('DatabaseID') ? (int) $request->input('DatabaseID') : 0;
         if ($request->has('DatabaseID')) {
             $migration = MultiDatabase::find($request->input('DatabaseID'));
-            if (! $migration) {
+            if (!$migration) {
                 return response()->json([
                     'status' => 404,
                     'error' => 'DatabaseID not Found',
@@ -44,9 +44,10 @@ class FileViewController extends Controller
         if ($request->has('DatabaseID')) {
             MultiMigrationService::disconnectFromMulti();
         }
+        $ReFile = new FileResource($file, $databaseId);
 
         return response()->json([
-            'data' => FileResource::collection($file),
+            'data' => $ReFile->collection($file),
         ]);
     }
 }
