@@ -34,10 +34,10 @@ class FileSearchController extends Controller
                 'error' => 'business code not Found',
             ]);
         }
-        $ReFile = new FileResource($file, $databaseId);
+        $ReFilesearch = new FileResource($file, $databaseId);
 
         return response()->json([
-            'data' => $ReFile->collection($file),
+            'data' => $ReFilesearch->collection($file),
         ]);
     }
 }
