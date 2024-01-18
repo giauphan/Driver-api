@@ -49,7 +49,12 @@ class FileViewDriverController extends Controller
 
         $database_name = MultiDatabase::query()
             ->where('has_database_name', $folder)->first();
-
+        if (!$database_name) {
+            return response()->json([
+                'status' => 404,
+                'error' => 'DatabaseID not Found',
+            ]);
+        }
         MultiMigrationService::switchToMulti($database_name);
         $files = FileData::query()
             ->select('business_code', 'has_business_code', 'type_data')
