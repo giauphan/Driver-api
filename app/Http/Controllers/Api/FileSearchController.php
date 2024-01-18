@@ -21,7 +21,7 @@ class FileSearchController extends Controller
                 MultiMigrationService::switchToMulti($database);
                 $file = FileData::where('business_code', $request->input('business_code'))->get();
 
-                if (! $file->isEmpty()) {
+                if (!$file->isEmpty()) {
                     $databaseId = $database->id;
                     break;
                 }
@@ -34,10 +34,10 @@ class FileSearchController extends Controller
                 'error' => 'business code not Found',
             ]);
         }
-        $ReFilesearch = new FileResource($file, $databaseId);
+        $ReFilesearch = new FileResource($file->first(), $databaseId);
 
         return response()->json([
-            'data' => $ReFilesearch->collection($file),
+            'data' => $ReFilesearch->toArray(null),
         ]);
     }
 }

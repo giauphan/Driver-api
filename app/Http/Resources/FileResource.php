@@ -10,21 +10,25 @@ use Illuminate\Http\Resources\Json\JsonResource;
  */
 class FileResource extends JsonResource
 {
-    public static $DatabaseId;
+    public int $DatabaseId;
 
     public function __construct($resource, int $DatabaseId)
     {
         parent::__construct($resource);
-        self::$DatabaseId = $DatabaseId;
+        $this->DatabaseId = $DatabaseId;
     }
 
-    public function toArray(Request $request): array
+    public function toArray($request): array
     {
+        $request = $request ?? app('request');
+
         return [
             'id' => $this->id,
             'business_code' => $this->business_code,
             'has_business_code' => $this->has_business_code,
-            'url_preview' => self::$DatabaseId != 0 ? route('preview', ['id' => $this->has_business_code, 'DatabaseID' => self::$DatabaseId]) : route('preview', ['id' => $this->has_business_code]),
+            'url_preview' => $this->DatabaseId != 0
+                ? route('preview', ['id' => $this->has_business_code, 'DatabaseID' => $this->DatabaseId])
+                : route('preview', ['id' => $this->has_business_code]),
         ];
     }
 }
