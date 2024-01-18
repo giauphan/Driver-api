@@ -13,7 +13,7 @@ class FileSearchController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $databaseId =  0;
+        $databaseId = 0;
         $file = null;
         if ($request->has('business_code')) {
             $migration = MultiDatabase::get();
@@ -21,7 +21,7 @@ class FileSearchController extends Controller
                 MultiMigrationService::switchToMulti($database);
                 $file = FileData::where('business_code', $request->input('business_code'))->get();
 
-                if (!$file->isEmpty()) {
+                if (! $file->isEmpty()) {
                     $databaseId = $database->id;
                     break;
                 }

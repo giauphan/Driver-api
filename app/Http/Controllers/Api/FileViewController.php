@@ -17,7 +17,7 @@ class FileViewController extends Controller
         $databaseId = $request->has('DatabaseID') ? (int) $request->input('DatabaseID') : 0;
         if ($request->has('DatabaseID')) {
             $migration = MultiDatabase::find($request->input('DatabaseID'));
-            if (!$migration) {
+            if (! $migration) {
                 return response()->json([
                     'status' => 404,
                     'error' => 'DatabaseID not Found',
