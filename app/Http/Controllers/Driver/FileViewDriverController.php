@@ -49,8 +49,8 @@ class FileViewDriverController extends Controller
 
         $database_name = MultiDatabase::query()
             ->where('has_database_name', $folder)->first();
-        if (!$database_name) {
-           abort(404);
+        if (! $database_name) {
+            abort(404);
         }
         MultiMigrationService::switchToMulti($database_name);
         $files = FileData::query()
