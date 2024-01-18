@@ -17,7 +17,7 @@ class FileResource extends JsonResource
         $this->DatabaseId = $DatabaseId;
     }
 
-    public function toArray($request): array
+    public function toArray($request = null): array
     {
         if ($this->resource === null) {
             return [];
