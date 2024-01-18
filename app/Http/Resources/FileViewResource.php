@@ -19,6 +19,7 @@ class FileViewResource extends JsonResource
             'business_code' => $this->business_code,
             'Data' => $this->Data,
             'type_data' => $this->type_data,
+            'url_preview' => route('preview', ['id' => $this->has_business_code]),
             'created_at' => Carbon::parse($this->created_at)->format('--M d.Y'),
         ];
     }
