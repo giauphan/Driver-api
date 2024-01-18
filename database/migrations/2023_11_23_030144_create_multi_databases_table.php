@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('host');
             $table->string('database')->index()->unique();
+            $table->string('has_database_name');
             $table->string('port');
             $table->string('username')->index();
             $table->string('password')->nullable()->index();
