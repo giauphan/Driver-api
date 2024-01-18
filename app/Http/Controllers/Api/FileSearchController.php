@@ -21,7 +21,7 @@ class FileSearchController extends Controller
                 MultiMigrationService::switchToMulti($database);
                 $file = FileData::where('business_code', $request->input('business_code'))->get();
 
-                if (!$file->isEmpty()) {
+                if (! $file->isEmpty()) {
                     $databaseId = $database->id;
                     break;
                 }
