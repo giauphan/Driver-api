@@ -19,6 +19,9 @@ class FileResource extends JsonResource
 
     public function toArray($request): array
     {
+        if ($this->resource === null) {
+            return [];
+        }
         $request = $request ?? app('request');
 
         return [
