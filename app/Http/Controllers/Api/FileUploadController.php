@@ -69,6 +69,7 @@ class FileUploadController extends Controller
             ], 400);
         }
 
+        $this->checkExit($fileName);
         $encodedData = base64_encode($fileContents);
 
         $hashedFileName = Hash::make($fileName);
@@ -95,7 +96,6 @@ class FileUploadController extends Controller
                 'message' => 'Duplicate record',
             ], 200);
         }
-        $this->checkExit($fileName);
 
         $share = route('preview', ['id' => $record->has_business_code]);
         $migration = MultiDatabase::where('status', 1)
