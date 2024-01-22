@@ -17,22 +17,23 @@ class BusinessCodeChecker
         $migration = MultiDatabase::get();
 
         foreach ($migration as $database) {
+            try {
+              
             MultiMigrationService::switchToMulti($database);
             $file = FileData::where('business_code', $businessCode)->get();
 
-            if (! $file->isEmpty()) {
+            if (!$file->isEmpty()) {
                 $databaseId = $database->id;
                 break;
             }
-
             MultiMigrationService::disconnectFromMulti();
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
         }
 
         if ($file == null) {
-            return response()->json([
-                'status' => 404,
-                'error' => 'business code not Found',
-            ]);
+            return null;
         }
         $ReFilesearch = new FileResource($file->first(), $databaseId);
 
