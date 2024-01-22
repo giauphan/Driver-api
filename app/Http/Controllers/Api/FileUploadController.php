@@ -103,7 +103,7 @@ class FileUploadController extends Controller
             ->first();
 
         if ($migration) {
-            $share .= '&&DatabaseID=' . $migration->id;
+            $share .= '&&DatabaseID='.$migration->id;
         }
 
         return response()->json([
@@ -122,7 +122,7 @@ class FileUploadController extends Controller
         MultiDatabase::where('status', 1)->update(['status' => 0]);
 
         // 3. Use the obtained id to construct the new database name
-        $newDatabaseName = $databaseName . '_bcdnscanner_' . ($newRecord ? ($newRecord->id + 1) : 1);
+        $newDatabaseName = $databaseName.'_bcdnscanner_'.($newRecord ? ($newRecord->id + 1) : 1);
 
         // 4. Ensure the new database name is unique
         $database_multi = MultiDatabase::create(
@@ -218,7 +218,6 @@ class FileUploadController extends Controller
         return $record_id;
     }
 
-
     private function checkExit(string $business_code)
     {
         $databaseId = 0;
@@ -228,7 +227,7 @@ class FileUploadController extends Controller
             MultiMigrationService::switchToMulti($database);
             $file = FileData::where('business_code', $business_code)->get();
 
-            if (!$file->isEmpty()) {
+            if (! $file->isEmpty()) {
                 $databaseId = $database->id;
                 break;
             }
