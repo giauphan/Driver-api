@@ -73,7 +73,7 @@ class FileUploadController extends Controller
 
         if ($checkResult !== null) {
             return $checkResult;
-        }        
+        }
 
         $encodedData = base64_encode($fileContents);
 
