@@ -69,7 +69,11 @@ class FileUploadController extends Controller
             ], 400);
         }
 
-        BusinessCodeChecker::checkExit($fileName);
+        $checkResult = BusinessCodeChecker::checkExit($fileName);
+
+        if ($checkResult !== null) {
+            return $checkResult;
+        }        
 
         $encodedData = base64_encode($fileContents);
 

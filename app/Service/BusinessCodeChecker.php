@@ -26,9 +26,9 @@ class BusinessCodeChecker
                     $databaseId = $database->id;
                     $ReFilesearch = new FileResource($file, $databaseId);
 
-                    return response()->json([
-                        'data' => $ReFilesearch->toArray(null),
-                    ]);
+                    return response()->json(
+                        $ReFilesearch->toArray(null),
+                    );
                 }
             } catch (\Throwable $th) {
                 Log::error('Error checking database: '.$th->getMessage());
