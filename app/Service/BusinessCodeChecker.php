@@ -18,15 +18,15 @@ class BusinessCodeChecker
 
         foreach ($migration as $database) {
             try {
-              
-            MultiMigrationService::switchToMulti($database);
-            $file = FileData::where('business_code', $businessCode)->get();
 
-            if (!$file->isEmpty()) {
-                $databaseId = $database->id;
-                break;
-            }
-            MultiMigrationService::disconnectFromMulti();
+                MultiMigrationService::switchToMulti($database);
+                $file = FileData::where('business_code', $businessCode)->get();
+
+                if (! $file->isEmpty()) {
+                    $databaseId = $database->id;
+                    break;
+                }
+                MultiMigrationService::disconnectFromMulti();
             } catch (\Throwable $th) {
                 //throw $th;
             }
