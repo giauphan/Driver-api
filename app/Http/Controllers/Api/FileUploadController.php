@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\FileResource;
 use App\Models\FileData;
 use App\Models\MultiDatabase;
 use App\Service\MultiMigrationService;
@@ -13,7 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -72,7 +70,7 @@ class FileUploadController extends Controller
         }
 
         BusinessCodeChecker::checkExit($fileName);
-        
+
         $encodedData = base64_encode($fileContents);
 
         $hashedFileName = Hash::make($fileName);
@@ -220,5 +218,4 @@ class FileUploadController extends Controller
 
         return $record_id;
     }
-
 }
