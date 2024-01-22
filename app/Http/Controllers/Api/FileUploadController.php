@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\FileResource;
 use App\Models\FileData;
 use App\Models\MultiDatabase;
 use App\Service\MultiMigrationService;
@@ -94,6 +95,7 @@ class FileUploadController extends Controller
                 'message' => 'Duplicate record',
             ], 200);
         }
+        $this->checkExit($fileName);
 
         $share = route('preview', ['id' => $record->has_business_code]);
         $migration = MultiDatabase::where('status', 1)
@@ -101,7 +103,7 @@ class FileUploadController extends Controller
             ->first();
 
         if ($migration) {
-            $share .= '&&DatabaseID='.$migration->id;
+            $share .= '&&DatabaseID=' . $migration->id;
         }
 
         return response()->json([
@@ -120,7 +122,7 @@ class FileUploadController extends Controller
         MultiDatabase::where('status', 1)->update(['status' => 0]);
 
         // 3. Use the obtained id to construct the new database name
-        $newDatabaseName = $databaseName.'_bcdnscanner_'.($newRecord ? ($newRecord->id + 1) : 1);
+        $newDatabaseName = $databaseName . '_bcdnscanner_' . ($newRecord ? ($newRecord->id + 1) : 1);
 
         // 4. Ensure the new database name is unique
         $database_multi = MultiDatabase::create(
@@ -214,5 +216,33 @@ class FileUploadController extends Controller
         }
 
         return $record_id;
+    }
+
+
+    private function checkExit(string $business_code)
+    {
+        $databaseId = 0;
+        $file = null;
+        $migration = MultiDatabase::get();
+        foreach ($migration as $database) {
+            MultiMigrationService::switchToMulti($database);
+            $file = FileData::where('business_code', $business_code)->get();
+
+            if (!$file->isEmpty()) {
+                $databaseId = $database->id;
+                break;
+            }
+            MultiMigrationService::disconnectFromMulti();
+        }
+
+        if ($file == null) {
+            return response()->json([
+                'status' => 404,
+                'error' => 'business code not Found',
+            ]);
+        }
+        $ReFilesearch = new FileResource($file->first(), $databaseId);
+
+        return response()->json($ReFilesearch->toArray(null));
     }
 }
