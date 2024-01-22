@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Http\Resources\FileResource;
 use App\Models\FileData;
 use App\Models\MultiDatabase;
+use Illuminate\Support\Facades\Log;
 
 class BusinessCodeChecker
 {
@@ -18,7 +19,6 @@ class BusinessCodeChecker
 
         foreach ($migration as $database) {
             try {
-
                 MultiMigrationService::switchToMulti($database);
                 $file = FileData::where('business_code', $businessCode)->first();
 
@@ -30,16 +30,14 @@ class BusinessCodeChecker
                         'data' => $ReFilesearch->toArray(null),
                     ]);
                 }
-
-                MultiMigrationService::disconnectFromMulti();
             } catch (\Throwable $th) {
-
+                Log::error('Error checking database: '.$th->getMessage());
+            } finally {
+                MultiMigrationService::disconnectFromMulti();
             }
         }
 
-        if ($file == null) {
-            return null;
-        }
+        return null;
 
     }
 }
