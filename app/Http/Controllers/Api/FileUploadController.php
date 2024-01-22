@@ -7,6 +7,7 @@ use App\Http\Resources\FileResource;
 use App\Models\FileData;
 use App\Models\MultiDatabase;
 use App\Service\MultiMigrationService;
+use App\Services\BusinessCodeChecker;
 use App\Settings\SettingServerStorage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -70,7 +71,8 @@ class FileUploadController extends Controller
             ], 400);
         }
 
-        $this->checkExit($fileName);
+        BusinessCodeChecker::checkExit($fileName);
+        
         $encodedData = base64_encode($fileContents);
 
         $hashedFileName = Hash::make($fileName);
@@ -219,30 +221,4 @@ class FileUploadController extends Controller
         return $record_id;
     }
 
-    public function checkExit(string $business_code)
-    {
-        $databaseId = 0;
-        $file = null;
-        $migration = MultiDatabase::get();
-        foreach ($migration as $database) {
-            MultiMigrationService::switchToMulti($database);
-            $file = FileData::where('business_code', $business_code)->get();
-            Log::debug($database);
-            if (! $file->isEmpty()) {
-                $databaseId = $database->id;
-                break;
-            }
-            MultiMigrationService::disconnectFromMulti();
-        }
-
-        if ($file == null) {
-            return response()->json([
-                'status' => 404,
-                'error' => 'business code not Found',
-            ]);
-        }
-        $ReFilesearch = new FileResource($file->first(), $databaseId);
-
-        return response()->json($ReFilesearch->toArray(null));
-    }
 }
