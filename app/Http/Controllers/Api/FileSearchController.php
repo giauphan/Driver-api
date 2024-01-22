@@ -19,9 +19,9 @@ class FileSearchController extends Controller
             $migration = MultiDatabase::get();
             foreach ($migration as $database) {
                 MultiMigrationService::switchToMulti($database);
-                $file = FileData::where('business_code', $request->input('business_code'))->get();
+                $file = FileData::where('business_code', $request->input('business_code'))->first();
 
-                if (! $file->isEmpty()) {
+                if ($file != null) {
                     $databaseId = $database->id;
                     break;
                 }
@@ -34,7 +34,7 @@ class FileSearchController extends Controller
                 'error' => 'business code not Found',
             ]);
         }
-        $ReFilesearch = new FileResource($file->first(), $databaseId);
+        $ReFilesearch = new FileResource($file, $databaseId);
 
         return response()->json([
             'data' => $ReFilesearch->toArray(null),
