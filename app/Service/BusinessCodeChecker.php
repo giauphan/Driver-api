@@ -18,28 +18,28 @@ class BusinessCodeChecker
 
         foreach ($migration as $database) {
             try {
-              
-            MultiMigrationService::switchToMulti($database);
-            $file = FileData::where('business_code', $businessCode)->first();
 
-            if ($file != null) {
-                $databaseId = $database->id;
-                $ReFilesearch = new FileResource($file, $databaseId);
+                MultiMigrationService::switchToMulti($database);
+                $file = FileData::where('business_code', $businessCode)->first();
 
-                return response()->json([
-                    'data' => $ReFilesearch->toArray(null),
-                ]);
-            }
+                if ($file != null) {
+                    $databaseId = $database->id;
+                    $ReFilesearch = new FileResource($file, $databaseId);
 
-            MultiMigrationService::disconnectFromMulti();
+                    return response()->json([
+                        'data' => $ReFilesearch->toArray(null),
+                    ]);
+                }
+
+                MultiMigrationService::disconnectFromMulti();
             } catch (\Throwable $th) {
-         
+
             }
         }
 
         if ($file == null) {
             return null;
         }
-       
+
     }
 }
